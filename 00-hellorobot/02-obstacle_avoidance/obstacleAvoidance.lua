@@ -7,7 +7,7 @@ LEFT_PROXIMITY_SENSORS = {7, 8, 9, 10, 4, 5, 6}
 RIGHT_PROXIMITY_SENSORS = {15, 16, 17, 18, 19, 20}
 BACK_PROXIMITY_SENSORS = {11, 12, 13, 14}
 
----  Utility function to search an element in an
+---  Utility function to search an element in a table
 ---@param tab any the table on which the elements is searched
 ---@param val any the searched value
 local function has_value (tab, val)
