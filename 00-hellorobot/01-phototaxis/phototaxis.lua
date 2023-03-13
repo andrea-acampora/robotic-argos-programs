@@ -1,65 +1,62 @@
-MOVE_STEPS = 15
 MAX_VELOCITY = 10
-
 N_STEPS = 0
 
+FRONT_LIGHT_SENSORS = {1, 2, 3, 21, 22, 23, 24}
+LEFT_LIGHT_SENSORS = {7, 8, 9, 10, 4, 5, 6}
+RIGHT_LIGHT_SENSORS = {15, 16, 17, 18, 19, 20}
+BACK_LIGHT_SENSORS = {11, 12, 13, 14}
+
+---  Utility function to search an element in an
+---@param tab any the table on which the elements is searched
+---@param val any the searched value
+local function has_value (tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+    return false
+end
 
 function init()
-	left_v = robot.random.uniform(0, MAX_VELOCITY)
-	right_v = robot.random.uniform(0, MAX_VELOCITY)
-	robot.wheels.set_velocity(left_v, right_v)
 	N_STEPS = 0
 end
 
-
 function step()
 	N_STEPS = N_STEPS + 1
-	nord_light = robot.light[1].value + robot.light[24].value
-	south_light = robot.light[12].value + robot.light[13].value
-	east_light = robot.light[18].value + robot.light[19].value
-	west_light = robot.light[6].value + robot.light[7].value
-	max_light = math.max(nord_light, south_light, east_light, west_light)
-
-	if N_STEPS % MOVE_STEPS == 0 then
-		if nord_light  == max_light then
-			goNord()
-		end
-		if south_light  == max_light then
-			goSouth()
-		end
-		if east_light  == max_light then
-			goEast()
-		end
-		if west_light  == max_light then
-			goWest()
-		end
+	max_light = 0
+	sensor_with_max_light = 0
+	for i=1,#robot.light do
+        if robot.light[i].value > max_light then
+            sensor_with_max_light = i
+            max_light = robot.light[i].value
+        end
 	end
 
-	function goNord()
+	if has_value(FRONT_LIGHT_SENSORS, sensor_with_max_light) then
 		robot.wheels.set_velocity(MAX_VELOCITY, MAX_VELOCITY)
-	end
-
-	function goSouth()
-		robot.wheels.set_velocity(-MAX_VELOCITY, -MAX_VELOCITY)
-	end
-
-	function goEast()
+	elseif has_value(RIGHT_LIGHT_SENSORS, sensor_with_max_light) then
 		robot.wheels.set_velocity(MAX_VELOCITY, 0)
+	elseif has_value(LEFT_LIGHT_SENSORS, sensor_with_max_light) then
+		robot.wheels.set_velocity(0, MAX_VELOCITY)
+	elseif has_value(BACK_LIGHT_SENSORS, sensor_with_max_light) then
+		robot.wheels.set_velocity(-MAX_VELOCITY, -MAX_VELOCITY)
+	elseif sensor_with_max_light == 0 then
+		goRandom()
 	end
 
-	function goWest()
-		robot.wheels.set_velocity(0, MAX_VELOCITY)
+	function goRandom()
+		left_v = robot.random.uniform(0,MAX_VELOCITY)
+		right_v = robot.random.uniform(0,MAX_VELOCITY)
+		robot.wheels.set_velocity(left_v,right_v)
 	end
 
 end
 
 function reset()
-	left_v = robot.random.uniform(0, MAX_VELOCITY)
-	right_v = robot.random.uniform(0, MAX_VELOCITY)
-	robot.wheels.set_velocity(left_v, right_v)
+	robot.wheels.set_velocity(0, 0)
 	N_STEPS = 0
 end
-
 
 function destroy()
 end
