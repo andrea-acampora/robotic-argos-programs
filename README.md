@@ -13,4 +13,6 @@ Repository with some programs written in *Lua* for **Argos Simulator** for *Inte
 
 ## Usage
 
-` argos3 -c <program_name>.argos &`
+```bash
+argos3 -c <program_name>.argos &
+```
