@@ -1,5 +1,5 @@
 MAX_VELOCITY = 15
-PROXIMITY_THRESHOLD = 0.25
+PROXIMITY_THRESHOLD = 0.20
 N_STEPS = 0
 NUM_SENSORS = 24
 
@@ -7,6 +7,8 @@ FRONT_SENSORS = {1, 2, 3, 21, 22, 23, 24}
 LEFT_SENSORS = {7, 8, 9, 10, 4, 5, 6}
 RIGHT_SENSORS = {15, 16, 17, 18, 19, 20}
 BACK_SENSORS = {11, 12, 13, 14}
+
+LEFT_PROXIMITY_SENSORS = {1, 2, 3, 4, 5, 6, 7}
 
 ---  Utility function to search an element in a table
 ---@param tab any the table on which the elements is searched
@@ -42,15 +44,10 @@ local function followTheLight()
 end
 
 local function manageObstacleAvoidance()
-	if has_value(FRONT_SENSORS, sensor_with_max_proximity) then
-		log("Obstacle in front of me.. turning right!")
+	if has_value(LEFT_PROXIMITY_SENSORS, sensor_with_max_proximity) then
 		robot.wheels.set_velocity(MAX_VELOCITY, 0)
-	elseif has_value(RIGHT_SENSORS, sensor_with_max_proximity) then
-		log("Obstacle on my right.. turning left!")
+	else
 		robot.wheels.set_velocity(0, MAX_VELOCITY)
-	elseif has_value(LEFT_SENSORS, sensor_with_max_proximity) then
-		log("Obstacle on my left.. turning right!")
-		robot.wheels.set_velocity(MAX_VELOCITY, 0)
 	end
 end
 
@@ -76,10 +73,6 @@ function step()
 			sensor_with_max_proximity = i
 			max_proximity = robot.proximity[i].value
 		end
-	end
-
-	if max_proximity == 1 then
-		log("Crash!")
 	end
 
 	if max_proximity < PROXIMITY_THRESHOLD then

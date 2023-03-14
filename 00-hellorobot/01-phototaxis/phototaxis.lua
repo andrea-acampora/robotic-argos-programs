@@ -18,14 +18,21 @@ local function has_value (tab, val)
     return false
 end
 
+local function goRandom()
+	left_v = robot.random.uniform(0,MAX_VELOCITY)
+	right_v = robot.random.uniform(0,MAX_VELOCITY)
+	robot.wheels.set_velocity(left_v,right_v)
+end
+
 function init()
 	N_STEPS = 0
 end
 
 function step()
 	N_STEPS = N_STEPS + 1
-	max_light = 0
-	sensor_with_max_light = 0
+
+	max_light = 0 -- If no light is detected from sensors than this value still remain to 0
+	sensor_with_max_light = 0 -- the sensor which detect the highest luminosity
 	for i=1,#robot.light do
         if robot.light[i].value > max_light then
             sensor_with_max_light = i
@@ -33,6 +40,7 @@ function step()
         end
 	end
 
+	-- Check the direction of the sensor with highest luminosity and make the footbot turn in that direction
 	if has_value(FRONT_LIGHT_SENSORS, sensor_with_max_light) then
 		robot.wheels.set_velocity(MAX_VELOCITY, MAX_VELOCITY)
 	elseif has_value(RIGHT_LIGHT_SENSORS, sensor_with_max_light) then
@@ -41,14 +49,8 @@ function step()
 		robot.wheels.set_velocity(0, MAX_VELOCITY)
 	elseif has_value(BACK_LIGHT_SENSORS, sensor_with_max_light) then
 		robot.wheels.set_velocity(-MAX_VELOCITY, -MAX_VELOCITY)
-	elseif sensor_with_max_light == 0 then
+	elseif sensor_with_max_light == 0 then -- If no light is detected than the robot go randomly
 		goRandom()
-	end
-
-	function goRandom()
-		left_v = robot.random.uniform(0,MAX_VELOCITY)
-		right_v = robot.random.uniform(0,MAX_VELOCITY)
-		robot.wheels.set_velocity(left_v,right_v)
 	end
 
 end
