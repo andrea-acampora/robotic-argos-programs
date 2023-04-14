@@ -29,7 +29,7 @@
         <footbot_motor_ground implementation="rot_z_only" />
         <range_and_bearing implementation="medium" medium="rab" />
       </sensors>
-      <params script="aggregation.lua" />
+      <params script="two_spots.lua" />
     </lua_controller>
 
   </controllers>
@@ -38,7 +38,7 @@
   <!-- * Arena configuration * -->
   <!-- *********************** -->
   <arena size="4.2, 5.2, 1.2" center="0,0,0.5">
-    <floor id="f" source="image" path="../floors/no_spot.png" />
+    <floor id="f" source="image" path="../floors/two_spots.png" />
 
     <box id="bn" size="0.1, 5, 0.2" movable="false">
       <body position="2,0,0"  orientation="0,0,0" />
